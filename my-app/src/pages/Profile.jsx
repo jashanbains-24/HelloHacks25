@@ -1,11 +1,9 @@
-// src/pages/Profile.jsx
 import { useMemo, useState, useCallback, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import TopBar from "../components/TopBar.jsx";
 import { supabase } from "../SupaBaseClient";
 import "./Profile.css";
 
-/* ---------------- helpers ---------------- */
 const norm = (s) => String(s || "").toLowerCase().replace(/[\s\-_]+/g, "");
 const normCode = (s) => String(s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
 const toArray = (val) => {
@@ -19,11 +17,6 @@ const toArray = (val) => {
   return [];
 };
 
-/**
- * Locate the active user profile using `localStorage.activeUser`.
- * Searches window.FAKE_PROFILES (preferred) or localStorage.fake_profiles.
- * Returns the whole profile object or null.
- */
 function getActiveProfile() {
   try {
     const usernameOrEmail = localStorage.getItem("activeUser") || "";
@@ -55,7 +48,6 @@ const EMPLOYMENT_STATUSES = ["Unemployed", "Student", "Part-time", "Full-time", 
 export default function Profile() {
   const navigate = useNavigate();
 
-  // ----- form state -----
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName]   = useState("");
   const [age, setAge]             = useState("");
@@ -64,21 +56,17 @@ export default function Profile() {
   const [location, setLocation]   = useState("");
   const [employment, setEmployment] = useState("");
 
-  // ----- resume -----
   const [resumeFile, setResumeFile] = useState(null);
-  const [resumeFileNameOverride, setResumeFileNameOverride] = useState(""); // from profile.resumeFileName
+  const [resumeFileNameOverride, setResumeFileNameOverride] = useState("");
 
-  // ----- courses (DB) -----
   const [allCourses, setAllCourses] = useState([]);
-  const [completedIds, setCompletedIds] = useState([]); // DB IDs
+  const [completedIds, setCompletedIds] = useState([]);
   const [searchCourse, setSearchCourse] = useState("");
   const [searchSkill, setSearchSkill]   = useState("");
 
-  // Track if we already applied initial profile → fields to avoid re-overwriting after edits
   const [profileApplied, setProfileApplied] = useState(false);
   const [completedApplied, setCompletedApplied] = useState(false);
 
-  // Fetch courses from Supabase
   useEffect(() => {
     let alive = true;
     (async () => {
@@ -94,7 +82,6 @@ export default function Profile() {
     return () => { alive = false; };
   }, []);
 
-  // Normalize course fields
   const normalizedCourses = useMemo(() => {
     return (allCourses || []).map((c) => {
       const id = c.id;
@@ -105,7 +92,6 @@ export default function Profile() {
     });
   }, [allCourses]);
 
-  // Load profile once and prefill fields
   useEffect(() => {
     if (profileApplied) return;
     const prof = getActiveProfile();
@@ -122,7 +108,6 @@ export default function Profile() {
     setProfileApplied(true);
   }, [profileApplied]);
 
-  // Map profile.completedCourses (codes/titles) → DB IDs (apply once after courses load)
   useEffect(() => {
     if (completedApplied || !normalizedCourses.length) return;
     const prof = getActiveProfile();
@@ -150,7 +135,6 @@ export default function Profile() {
     setCompletedApplied(true);
   }, [normalizedCourses, completedApplied]);
 
-  // Derive lists
   const availableIds = useMemo(
     () => normalizedCourses.map(c => c.id).filter(id => !completedIds.includes(id)),
     [normalizedCourses, completedIds]
@@ -164,7 +148,6 @@ export default function Profile() {
     [normalizedCourses, availableIds]
   );
 
-  // Filters
   const filterFn = useCallback((c) => {
     const q = searchCourse.toLowerCase();
     const nameOk =
@@ -179,7 +162,6 @@ export default function Profile() {
   const filteredCompleted = useMemo(() => completedCourses.filter(filterFn), [completedCourses, filterFn]);
   const filteredAvailable = useMemo(() => availableCourses.filter(filterFn), [availableCourses, filterFn]);
 
-  // Drag & drop
   const onDragStart = (e, id) => {
     e.dataTransfer.setData("text/plain", id);
     e.dataTransfer.effectAllowed = "move";
@@ -188,11 +170,9 @@ export default function Profile() {
   const onDropToCompleted = (e) => { e.preventDefault(); const id = e.dataTransfer.getData("text/plain"); if (id) setCompletedIds(prev => prev.includes(id) ? prev : [...prev, id]); };
   const onDropToAvailable = (e) => { e.preventDefault(); const id = e.dataTransfer.getData("text/plain"); if (id) setCompletedIds(prev => prev.filter(cid => cid !== id)); };
 
-  // Quick action buttons (keyboard/mouse)
   const moveToCompleted = (id) => setCompletedIds((prev) => (prev.includes(id) ? prev : [...prev, id]));
   const moveToAvailable = (id) => setCompletedIds((prev) => prev.filter((cid) => cid !== id));
 
-  // Persist for Home page (saves derived codes & skills)
   useEffect(() => {
     const codes = completedCourses.map(c => c.code).filter(Boolean);
     localStorage.setItem("profileCourseCodes", JSON.stringify(codes));
@@ -201,7 +181,6 @@ export default function Profile() {
     localStorage.setItem("profileSkills", JSON.stringify(Array.from(skillSet)));
   }, [completedCourses]);
 
-  // Logout
   const handleLogout = () => {
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("activeUser");
@@ -213,7 +192,6 @@ export default function Profile() {
       <TopBar />
 
       <div className="page">
-        {/* Header */}
         <div className="row header" style={{ alignItems: "center" }}>
           <button className="return-btn" onClick={() => navigate(-1)} aria-label="Return">← Return</button>
           <h1 className="title" style={{ marginLeft: 8 }}>Profile</h1>
@@ -230,7 +208,6 @@ export default function Profile() {
           </div>
         </div>
 
-        {/* User details */}
         <section className="panel">
           <h2 className="section-title">User Details</h2>
           <div className="grid fields">
@@ -250,7 +227,6 @@ export default function Profile() {
           </div>
         </section>
 
-        {/* Resume */}
         <section className="panel">
           <h2 className="section-title">Resume</h2>
           <ResumeUploader
@@ -260,7 +236,6 @@ export default function Profile() {
           />
         </section>
 
-        {/* Courses (filters + lists together) */}
         <section className="panel">
           <div className="row between">
             <h2 className="section-title" style={{ margin: 0 }}>Courses</h2>
@@ -339,7 +314,6 @@ export default function Profile() {
   );
 }
 
-/* ---------- Inputs ---------- */
 function TextField({ id, label, value, setValue, placeholder }) {
   return (
     <div className="field">

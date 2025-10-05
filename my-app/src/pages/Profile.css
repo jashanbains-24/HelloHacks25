@@ -1,6 +1,3 @@
-/* =========================================
-   Modern Profile.css (drop-in replacement)
-   ========================================= */
 :root{
   --bg: #f6f7fb;
   --panel: #ffffff;
@@ -31,14 +28,12 @@ html, body {
   color: var(--text);
 }
 
-/* Page frame */
 .page {
   max-width: 1100px;
   margin: 0 auto;
   padding: 20px;
 }
 
-/* Rows */
 .row {
   display: flex;
   align-items: center;
@@ -53,7 +48,6 @@ html, body {
   flex-wrap: wrap;
 }
 
-/* Page title */
 .title {
   margin: 0;
   font-size: clamp(22px, 2.2vw, 28px);
@@ -61,7 +55,6 @@ html, body {
   letter-spacing: -0.02em;
 }
 
-/* Buttons (Return/Logout) */
 .return-btn {
   appearance: none;
   border: 1px solid var(--border);
@@ -83,7 +76,6 @@ html, body {
   outline-offset: 2px;
 }
 
-/* Panels */
 .panel {
   background: var(--panel);
   color: var(--text);
@@ -102,7 +94,6 @@ html, body {
   box-shadow: 0 0 0 4px var(--brand-soft), var(--shadow);
 }
 
-/* Section titles */
 .section-title {
   margin: 0 0 12px;
   font-size: 18px;
@@ -110,7 +101,6 @@ html, body {
   letter-spacing: -0.01em;
 }
 
-/* ====== Forms ====== */
 .grid.fields {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -151,7 +141,6 @@ html, body {
   box-shadow: 0 0 0 4px var(--brand-soft);
 }
 
-/* Filters (course search) */
 .filters {
   display: flex;
   gap: 8px;
@@ -172,7 +161,6 @@ html, body {
   box-shadow: 0 0 0 4px var(--brand-soft);
 }
 
-/* ====== Lists (Completed / Available) ====== */
 .grid.lists {
   display: grid;
   gap: 16px;
@@ -216,17 +204,15 @@ html, body {
   color: var(--muted);
 }
 
-/* Scroll area for cards */
 .cards {
   display: grid;
   gap: 10px;
-  max-height: 520px;          /* keeps panel compact while scrolling */
+  max-height: 520px;
   overflow-y: auto;
   padding-right: 6px;
   scroll-padding-bottom: 16px;
 }
 
-/* Nice thin scrollbars (WebKit + Firefox) */
 .cards::-webkit-scrollbar { width: 10px; }
 .cards::-webkit-scrollbar-thumb {
   background: #e3e7ef;
@@ -237,7 +223,6 @@ html, body {
 .cards:hover::-webkit-scrollbar-thumb { background: #cfd6e4; }
 .cards { scrollbar-color: #cfd6e4 transparent; scrollbar-width: thin; }
 
-/* Course cards */
 .card {
   background: var(--panel);
   border: 1px solid var(--border);
@@ -264,7 +249,6 @@ html, body {
   color: #0b1220;
 }
 
-/* Skill chips */
 .skills {
   display: flex;
   flex-wrap: wrap;
@@ -280,7 +264,6 @@ html, body {
   font-weight: 700;
 }
 
-/* Move buttons */
 .move-btn {
   justify-self: start;
   appearance: none;
@@ -303,7 +286,6 @@ html, body {
   outline-offset: 2px;
 }
 
-/* Uploader */
 .uploader {
   display: grid;
   gap: 10px;
@@ -342,7 +324,6 @@ html, body {
 
 .file-input { display: none; }
 
-/* Resume meta */
 .resume-meta {
   display: flex;
   align-items: center;
@@ -373,10 +354,8 @@ html, body {
   font-size: 12px;
 }
 
-/* Utility: subtle drag-over indicator on columns via JS toggling .drag-over */
 .list.drag-over { background: #f2f6ff; }
 
-/* Reduce motion for users who prefer it */
 @media (prefers-reduced-motion: reduce) {
   .panel, .card, .return-btn, .move-btn, .dropzone, .field input, .field select, .search {
     transition: none !important;

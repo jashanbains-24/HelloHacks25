@@ -1,13 +1,11 @@
-// src/pages/Home.jsx
 import { useEffect, useRef, useState, useMemo } from "react";
 import TopBar from "../components/TopBar.jsx";
 import { supabase } from "../SupaBaseClient";
 
 export default function Home() {
-  const [zoomSide, setZoomSide] = useState(null); // 'left' | 'right' | null
+  const [zoomSide, setZoomSide] = useState(null);
   const inputRef = useRef(null);
 
-  // ---------- helpers ----------
   const toArray = (val) => {
     if (!val) return [];
     if (Array.isArray(val)) return val;
@@ -20,12 +18,11 @@ export default function Home() {
   };
   const lc = (arr) => arr.map((x) => String(x).toLowerCase().trim());
   const coverageColor = (coverage) => {
-    const hue = Math.max(0, Math.min(120, Math.round(coverage * 120))); // 0=red, 120=green
+    const hue = Math.max(0, Math.min(120, Math.round(coverage * 120)));
     return `hsl(${hue}, 85%, 50%)`;
   };
-  const normCode = (x) => String(x || "").toLowerCase().replace(/[^a-z0-9]/g, ""); // ignore spaces/dashes
+  const normCode = (x) => String(x || "").toLowerCase().replace(/[^a-z0-9]/g, "");
 
-  // ---------- Profile-saved data ----------
   const [profileSkills, setProfileSkills] = useState([]);
   useEffect(() => {
     try {
@@ -56,7 +53,6 @@ export default function Home() {
     return [];
   };
 
-  // ---------- LEFT (Employment) ----------
   const [company, setCompany] = useState("");
   const [jobs, setJobs] = useState([]);
   const [jobId, setJobId] = useState("");
@@ -87,14 +83,12 @@ export default function Home() {
     else { setErrJobs(""); setJobs(data || []); }
   }
 
-  // Debounced type-to-search for Employment
   useEffect(() => {
     if (zoomSide !== "left") return;
     const t = setTimeout(() => { fetchJobs(company); }, 300);
     return () => clearTimeout(t);
   }, [company, zoomSide]);
 
-  // Load skills + course recs when a job card is selected (Employment)
   useEffect(() => {
     const run = async () => {
       const job = jobs.find((j) => String(j.id) === String(jobId));
@@ -130,20 +124,18 @@ export default function Home() {
     [jobs, jobId]
   );
 
-  // Employment progress from Profile
   const profileLC = lc(profileSkills);
   const needLC_emp = lc(jobSkills);
   const haveLC_emp = needLC_emp.filter(s => profileLC.includes(s));
   const progress_emp = needLC_emp.length ? haveLC_emp.length / needLC_emp.length : 0;
   const progressPct_emp = Math.round(progress_emp * 100);
 
-  // ---------- RIGHT (Skills or Courses) ----------
   const [courseInput, setCourseInput] = useState("");
-  const [yourSkills, setYourSkills] = useState([]);      // derived from entered courses + typed skills OR saved set
-  const [jobMatches, setJobMatches] = useState([]);      // [{id,title,company,matched,needed,coverage}]
+  const [yourSkills, setYourSkills] = useState([]);
+  const [jobMatches, setJobMatches] = useState([]);
   const [loadingSkills, setLoadingSkills] = useState(false);
   const [errSkills, setErrSkills] = useState("");
-  const [matchJobId, setMatchJobId] = useState("");      // selected job on right side
+  const [matchJobId, setMatchJobId] = useState("");
 
   const rankJobsFromSkills = async (skills) => {
     const { data: allJobs, error: jErr } = await supabase.from("jobs").select("*");
@@ -241,7 +233,6 @@ export default function Home() {
   const progress_right = needLC_right.length ? haveLC_right.length / needLC_right.length : 0;
   const progressPct_right = Math.round(progress_right * 100);
 
-  // ---------- diagonal UI behavior ----------
   const chooseSide = (side) => {
     setZoomSide(side);
     setTimeout(() => inputRef.current?.focus({ preventScroll: true }), 160);
@@ -276,7 +267,6 @@ export default function Home() {
       <TopBar />
 
       <main className={`viewport ${zoomSide ? `zoom-${zoomSide}` : ""}`} aria-label="Diagonal split landing">
-        {/* clickable diagonal panels */}
         <a className="panel panel--left" href="#" onClick={(e) => { e.preventDefault(); chooseSide("left"); }}>
           <div className="content">
             <span className="eyebrow">Search by</span>
@@ -293,14 +283,12 @@ export default function Home() {
           </div>
         </a>
 
-        {/* center content */}
         <div className={`center-content ${zoomSide === "left" ? "left-anchored" : ""}`}>
           <div className="text-content">
             <h1 id="centerTitle">{centerTitle}</h1>
             <p id="centerSub">{centerSub}</p>
           </div>
 
-          {/* SEARCH BAR — shared */}
           <form className="search-bar" onSubmit={onSubmit}>
             <input
               ref={inputRef}
@@ -313,7 +301,6 @@ export default function Home() {
             <button id="searchButton" type="submit">{zoomSide === "right" ? "Find jobs" : "Search"}</button>
           </form>
 
-          {/* Buttons under search */}
           {zoomSide === "right" ? (
             <div className="search-actions">
               <button className="switch-btn switch-inline centered" type="button" onClick={switchSide}>
@@ -326,15 +313,13 @@ export default function Home() {
           ) : zoomSide === "left" ? (
             <div className="search-actions">
               <button className="switch-btn switch-inline centered" type="button" onClick={switchSide}>
-                {switchLabel /* “Switch to Skills or Courses →” */ }
+                {switchLabel}
               </button>
             </div>
           ) : null}
 
-          {/* ---------- RESULTS (Employment: LEFT) ---------- */}
           {zoomSide === "left" && (
             <div className={`left-split ${jobId ? "" : "onecol"}`}>
-              {/* LEFT COLUMN: stacked job results */}
               <div className="left-col">
                 {loadingJobs && <div className="muted">Loading jobs…</div>}
                 {errJobs && <div className="error">{errJobs}</div>}
@@ -378,11 +363,9 @@ export default function Home() {
                     </div>
                   )
                 )}
-                {/* spacer to guarantee 1-card empty space */}
                 <div className="end-spacer" aria-hidden="true" />
               </div>
 
-              {/* RIGHT COLUMN: details (Employment) */}
               {jobId && (
                 <div className="right-col">
                   <div className="card glass details-card">
@@ -393,7 +376,6 @@ export default function Home() {
                       </div>
                     </div>
 
-                    {/* Progress (Profile) */}
                     <section className="details-section">
                       <div className="row between">
                         <h4 className="section-title">Your progress</h4>
@@ -409,7 +391,6 @@ export default function Home() {
                       )}
                     </section>
 
-                    {/* Required skills */}
                     <section className="details-section">
                       <h4 className="section-title">Required skills</h4>
                       {jobSkills.length ? (
@@ -424,7 +405,6 @@ export default function Home() {
                       )}
                     </section>
 
-                    {/* Recommended courses */}
                     <section className="details-section">
                       <div className="row between">
                         <h4 className="section-title">Recommended UBC courses</h4>
@@ -449,17 +429,14 @@ export default function Home() {
                       )}
                     </section>
                   </div>
-                  {/* spacer to guarantee 1-card empty space */}
                   <div className="end-spacer" aria-hidden="true" />
                 </div>
               )}
             </div>
           )}
 
-          {/* ---------- RESULTS (Skills / Courses: RIGHT) ---------- */}
           {zoomSide === "right" && (
             <div className={`right-split ${matchJobId ? "" : "onecol"}`}>
-              {/* LEFT COLUMN: SINGLE SCROLLABLE CARD with "Your skills" + "Jobs you match" */}
               <div className="left-col">
                 {loadingSkills && <div className="muted">Crunching skills…</div>}
                 {errSkills && <div className="error">{errSkills}</div>}
@@ -469,7 +446,6 @@ export default function Home() {
                     <h3 className="card-title">Your skills & job matches</h3>
                   </div>
 
-                  {/* Your skills */}
                   {!!yourSkills.length ? (
                     <>
                       <div className="chip-row">
@@ -481,7 +457,6 @@ export default function Home() {
                     <div className="muted">Enter course codes and/or skills above, or click “Use saved skills & courses”.</div>
                   )}
 
-                  {/* Jobs you match (clickable rows) */}
                   {jobMatches.length ? (
                     <ul className="card-list">
                       {jobMatches.map((j) => {
@@ -515,12 +490,10 @@ export default function Home() {
                     !!yourSkills.length && <div className="muted">No matches found yet.</div>
                   )}
 
-                  {/* bottom spacer inside scroll-card */}
                   <div className="scroll-spacer" aria-hidden="true" />
                 </div>
               </div>
 
-              {/* RIGHT COLUMN: job details (like Employment) */}
               {matchJobId && selectedMatchJob && (
                 <div className="right-col">
                   <div className="card glass details-card">
@@ -531,7 +504,6 @@ export default function Home() {
                       </div>
                     </div>
 
-                    {/* Progress (from entered/saved skills) */}
                     <section className="details-section">
                       <div className="row between">
                         <h4 className="section-title">Your progress</h4>
@@ -547,7 +519,6 @@ export default function Home() {
                       )}
                     </section>
 
-                    {/* Required skills (full list; green = you have it) */}
                     <section className="details-section">
                       <h4 className="section-title">Required skills</h4>
                       {selectedMatchJob.needed?.length ? (
@@ -562,7 +533,6 @@ export default function Home() {
                       )}
                     </section>
 
-                    {/* Matched subset (quick view) */}
                     {selectedMatchJob.matched?.length > 0 && (
                       <section className="details-section">
                         <h4 className="section-title">Matched skills</h4>
@@ -572,7 +542,6 @@ export default function Home() {
                       </section>
                     )}
                   </div>
-                  {/* spacer to guarantee 1-card empty space */}
                   <div className="end-spacer" aria-hidden="true" />
                 </div>
               )}
@@ -581,7 +550,6 @@ export default function Home() {
         </div>
       </main>
 
-      {/* --------- styles --------- */}
       <style>{`
 :root {
   --bg-1: hsl(210 10% 8%);
@@ -597,10 +565,8 @@ export default function Home() {
   --shadow: 0 10px 30px hsl(0 0% 0% / .35);
   --ease: cubic-bezier(.22,1,.36,1);
   --topbar-h: 64px;
-
-  /* scrolling tuneables */
-  --scroll-max: min(74vh, calc(100vh - 260px)); /* generous scroll */
-  --bottom-gap: 120px; /* “one card” worth of space at bottom */
+  --scroll-max: min(74vh, calc(100vh - 260px));
+  --bottom-gap: 120px;
 }
 
 html, body { height: 100%; overflow: hidden; }
@@ -638,7 +604,6 @@ body {
   z-index: 3; transform: scale(1.02);
 }
 
-/* Hide both sides' intro copy once a side is chosen */
 .zoom-left .panel .content,
 .zoom-right .panel .content {
   opacity: 0;
@@ -668,7 +633,6 @@ p.sub { font-weight: 300; font-size: clamp(14px, 2.2vw, 18px); color: var(--mute
 }
 .zoom-left .center-content, .zoom-right .center-content { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 
-/* Pull the center content slightly left in Employment mode */
 .left-anchored {
   left: 45%;
   transform: translate(-55%, -50%) scale(1);
@@ -678,7 +642,6 @@ p.sub { font-weight: 300; font-size: clamp(14px, 2.2vw, 18px); color: var(--mute
 .left-anchored .text-content { text-align: left; }
 .left-anchored .search-bar { margin-left: 0; }
 
-/* ---- SEARCH BAR ---- */
 .search-bar { display: flex; align-items: center; gap: 10px; background: var(--glass); border: 1px solid var(--border); border-radius: 16px; padding: 12px 16px; box-shadow: var(--shadow); width: min(640px, 70%); margin: 0 auto; }
 .search-bar input { flex: 1; border: none; outline: none; background: transparent; color: var(--fg-1); font-size: 1rem; }
 .search-bar button { border: 1px solid var(--border); background: hsl(210 18% 20%); color: var(--fg-1); font-weight: 700; padding: 10px 16px; border-radius: 12px; cursor: pointer; }
@@ -690,7 +653,6 @@ p.sub { font-weight: 300; font-size: clamp(14px, 2.2vw, 18px); color: var(--mute
   margin-top: 8px;
 }
 
-/* Switch + Saved buttons */
 .switch-btn.switch-inline{
   position: static;
   background: var(--glass);
@@ -714,7 +676,6 @@ p.sub { font-weight: 300; font-size: clamp(14px, 2.2vw, 18px); color: var(--mute
 }
 .btn-secondary.centered{ display: inline-block; }
 
-/* ---- Employment split layout ---- */
 .left-split {
   margin-top: 14px;
   display: grid;
@@ -724,7 +685,6 @@ p.sub { font-weight: 300; font-size: clamp(14px, 2.2vw, 18px); color: var(--mute
 }
 .left-split.onecol { grid-template-columns: 1fr; }
 
-/* ---- Skills/Courses split layout ---- */
 .right-split {
   margin-top: 14px;
   display: grid;
@@ -734,21 +694,18 @@ p.sub { font-weight: 300; font-size: clamp(14px, 2.2vw, 18px); color: var(--mute
 }
 .right-split.onecol { grid-template-columns: 1fr; }
 
-/* Make both columns scrollable with extra bottom space */
 .left-split .left-col,
 .left-split .right-col,
 .right-split .left-col,
 .right-split .right-col{
   max-height: var(--scroll-max);
   overflow-y: auto;
-  padding-right: 6px; /* avoid scrollbar overlay on content */
+  padding-right: 6px;
   scroll-padding-bottom: var(--bottom-gap);
 }
 
-/* spacer div to guarantee “one card” empty room */
 .end-spacer { height: var(--bottom-gap); }
 
-/* card container */
 .card.glass{
   background: var(--glass);
   border: 1px solid var(--border);
@@ -764,15 +721,13 @@ p.sub { font-weight: 300; font-size: clamp(14px, 2.2vw, 18px); color: var(--mute
 
 .divider{ height: 1px; background: var(--border); margin: 12px 0; }
 
-/* Scrollable combined card (right side) */
 .scroll-card{
   max-height: var(--scroll-max);
   overflow-y: auto;
   padding-right: 6px;
 }
-.scroll-card .scroll-spacer{ height: var(--bottom-gap); } /* inside-card spacer */
+.scroll-card .scroll-spacer{ height: var(--bottom-gap); }
 
-/* lists, chips, bars */
 .card-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
 .job-row {
   width: 100%;
