@@ -582,6 +582,8 @@ body {
   position: fixed;
   top: var(--topbar-h); left: 0; right: 0; bottom: 0;
   overflow: hidden;
+  height: calc(100dvh - var(--topbar-h));
+  background: var(--bg-1);
 }
 .panel {
   position: absolute; inset: 0;
