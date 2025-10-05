@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import LoginModal from './LoginModal.jsx';
-import profilePic from '../assets/Group 2.png'; // 👈 adjust the path if needed
+import profilePic from '../assets/Group 2.png'; 
 
 export default function TopBar() {
   const navigate = useNavigate();

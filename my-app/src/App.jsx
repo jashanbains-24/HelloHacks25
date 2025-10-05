@@ -1,8 +1,13 @@
-import { Routes, Route } from 'react-router-dom';
-import Home from './pages/Home.jsx';
-import Profile from './pages/Profile.jsx';
+import { useEffect } from "react";
+import { Routes, Route } from "react-router-dom";
+import Home from "./pages/Home.jsx";
+import Profile from "./pages/Profile.jsx";
 
 export default function App() {
+  useEffect(() => {
+    document.title = "Career Compass";
+  }, []);
+
   return (
     <>
       <style>{`
