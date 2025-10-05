@@ -1,7 +1,8 @@
 import TopBar from '../components/TopBar.jsx';
 
 import { useEffect, useState } from "react";
-import { supabase } from "./SupaBaseClient";
+import { supabase } from "../SupaBaseClient";
+
 
 // ---------------- helpers ----------------
 const toArray = (val) => {
