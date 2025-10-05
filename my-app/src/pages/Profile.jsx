@@ -22,16 +22,19 @@ const EMPLOYMENT_STATUSES = ["Unemployed", "Student", "Part-time", "Full-time", 
 export default function Profile() {
   const navigate = useNavigate();
 
+  // ----- form state -----
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName]   = useState("");
   const [age, setAge]             = useState("");
   const [email, setEmail]         = useState("");
-  const [phone, setPhone]         = useState("");      
-  const [location, setLocation]   = useState("");      
+  const [phone, setPhone]         = useState("");
+  const [location, setLocation]   = useState("");
   const [employment, setEmployment] = useState("");
 
-  const [resumeFile, setResumeFile] = useState(null);  
+  // ----- resume -----
+  const [resumeFile, setResumeFile] = useState(null);
 
+  // ----- courses -----
   const [completedIds, setCompletedIds] = useState(INITIAL_COMPLETED);
   const [searchCourse, setSearchCourse] = useState("");
   const [searchSkill, setSearchSkill]   = useState("");
@@ -71,14 +74,34 @@ export default function Profile() {
   const onDropToCompleted = (e) => { e.preventDefault(); moveToCompleted(e.dataTransfer.getData("text/plain")); };
   const onDropToAvailable = (e) => { e.preventDefault(); moveToAvailable(e.dataTransfer.getData("text/plain")); };
 
+  // ----- LOGOUT -----
+  const handleLogout = () => {
+    // These keys must match what your LoginModal sets
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("activeUser");
+    navigate("/");
+  };
+
   return (
     <>
       <TopBar />
 
       <div className="page">
-        <div className="row header">
+        <div className="row header" style={{ alignItems: "center" }}>
           <button className="return-btn" onClick={() => navigate(-1)} aria-label="Return">← Return</button>
-          <h1 className="title">Profile</h1>
+          <h1 className="title" style={{ marginLeft: 8 }}>Profile</h1>
+          {/* Push the logout button to the far right */}
+          <div style={{ marginLeft: "auto" }}>
+            <button
+              className="return-btn"
+              onClick={handleLogout}
+              aria-label="Logout"
+              title="Logout"
+              style={{ background: "#ef4444", color: "#fff", borderColor: "#ef4444" }}
+            >
+              Logout
+            </button>
+          </div>
         </div>
 
         <section className="panel">
@@ -89,8 +112,8 @@ export default function Profile() {
             <TextField id="lastName"  label="Last name"  value={lastName}  setValue={setLastName}  placeholder="Doe" />
             <NumberField id="age" label="Age" value={age} setValue={setAge} placeholder="22" min={0} />
             <EmailField  id="email" label="Email" value={email} setValue={setEmail} placeholder="jane@example.com" />
-            <TelField    id="phone" label="Phone" value={phone} setValue={setPhone} placeholder="+1 (555) 123-4567" /> {/* NEW */}
-            <TextField   id="location" label="Location" value={location} setValue={setLocation} placeholder="Vancouver, BC" /> {/* NEW */}
+            <TelField    id="phone" label="Phone" value={phone} setValue={setPhone} placeholder="+1 (555) 123-4567" />
+            <TextField   id="location" label="Location" value={location} setValue={setLocation} placeholder="Vancouver, BC" />
             <div className="field">
               <label htmlFor="employment">Employment status</label>
               <select id="employment" value={employment} onChange={(e) => setEmployment(e.target.value)}>

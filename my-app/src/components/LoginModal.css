@@ -9,31 +9,24 @@
 }
 
 .modal {
-  background: #ffffff;
+  background: #fff;
   color: #111;
   border-radius: 12px;
   padding: 2rem;
   width: 100%;
-  max-width: 380px;
+  max-width: 360px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
   animation: fadeIn 0.2s ease;
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 .modal h2 {
   text-align: center;
-  margin-bottom: 1.5rem;
-  color: #333;
+  margin-bottom: 1rem;
 }
 
 .modal form {
@@ -42,23 +35,11 @@
   gap: 1rem;
 }
 
-.modal label {
-  font-size: 0.9rem;
-  color: #444;
-  margin-bottom: -0.5rem;
-}
-
 .modal input {
   padding: 0.8rem;
   border-radius: 8px;
   border: 1px solid #ccc;
   font-size: 1rem;
-  transition: border-color 0.2s;
-}
-
-.modal input:focus {
-  border-color: #2563eb;
-  outline: none;
 }
 
 .modal button {
@@ -68,21 +49,15 @@
   border-radius: 8px;
   padding: 0.8rem;
   cursor: pointer;
-  font-weight: 600;
-  transition: background 0.2s, transform 0.1s;
+  transition: background 0.2s;
 }
 
 .modal button:hover {
-  background: #1d4ed8;
-}
-
-.modal button:active {
-  transform: scale(0.98);
+  background: #1e40af;
 }
 
 .error {
   color: #b91c1c;
   font-size: 0.9rem;
   text-align: center;
-  margin-bottom: 0.5rem;
 }
