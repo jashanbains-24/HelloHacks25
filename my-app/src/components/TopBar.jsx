@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import LoginModal from './LoginModal.jsx';
+import profilePic from '../assets/Group 2.png'; // 👈 adjust the path if needed
 
 export default function TopBar() {
   const navigate = useNavigate();
@@ -29,24 +30,29 @@ export default function TopBar() {
           </Link>
         </div>
 
+        {/* Profile Image Button */}
         <button
           className="profile-btn"
           aria-label="Open profile"
           title="Profile"
           onClick={handleProfileClick}
         >
-          <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
-            <circle cx="12" cy="8" r="4" />
-            <path d="M4 20c0-4 4-6 8-6s8 2 8 6" />
-          </svg>
+          <img src={profilePic} alt="Profile" className="profile-img" />
         </button>
 
         <style>{`
           .topbar {
-            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-            display: flex; justify-content: space-between; align-items: center;
-            height: 64px; padding: 0 16px;
-            background: rgba(116, 48, 136, 1.0);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 64px;
+            padding: 0 16px;
+            background: rgba(116, 48, 136, 1);
             border-bottom: 1px solid rgba(255,255,255,0.12);
           }
           .brand-name {
@@ -59,7 +65,8 @@ export default function TopBar() {
             text-decoration: none;
             cursor: pointer;
           }
-          .no-link:hover, .no-link:focus {
+          .no-link:hover,
+          .no-link:focus {
             opacity: 0.9;
           }
           .profile-btn {
@@ -68,10 +75,12 @@ export default function TopBar() {
             justify-content: center;
             width: 40px;
             height: 40px;
-            border-radius: 999px;
+            border-radius: 50%;
             background: transparent;
             border: 1px solid rgba(255,255,255,0.2);
             cursor: pointer;
+            overflow: hidden;
+            padding: 0;
           }
           .profile-btn:hover {
             border-color: rgba(255,255,255,0.4);
@@ -80,12 +89,10 @@ export default function TopBar() {
             outline: 2px solid rgba(96,165,250,0.6);
             outline-offset: 2px;
           }
-          .profile-btn svg {
-            width: 22px;
-            height: 22px;
-            fill: none;
-            stroke: #fff;
-            stroke-width: 1.8;
+          .profile-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
           }
         `}</style>
       </header>
