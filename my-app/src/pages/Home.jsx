@@ -283,7 +283,7 @@ export default function Home() {
           </div>
         </a>
 
-        <div className={`center-content ${zoomSide === "left" ? "left-anchored" : ""}`}>
+        <div className={`center-content ${zoomSide === "left" ? "left-anchored" : ""} ${zoomSide === "right" ? "right-anchored" : ""}`}>
           <div className="text-content">
             <h1 id="centerTitle">{centerTitle}</h1>
             <p id="centerSub">{centerSub}</p>
@@ -555,8 +555,8 @@ export default function Home() {
   --bg-1: hsl(210 10% 8%);
   --fg-1: hsl(0 0% 98%);
   --muted: hsl(0 0% 75%);
-  --left-grad-1: hsl(200 50% 25%);
-  --left-grad-2: hsl(210 60% 40%);
+  --left-grad-1: hsla(0, 1%, 72%, 1.00);
+  --left-grad-2: hsla(0, 0%, 44%, 1.00);
   --right-grad-1: hsl(210 5% 15%);
   --right-grad-2: hsl(210 5% 25%);
   --glass: hsl(0 0% 100% / .06);
@@ -626,10 +626,10 @@ p.sub { font-weight: 300; font-size: clamp(14px, 2.2vw, 18px); color: var(--mute
 
 .center-content {
   position: absolute; top: 50%; left: 50%;
-  transform: translate(-50%, -50%) scale(.9);
+  transform: translate(-50%, -50%) scale(1);
   opacity: 0; transition: all .5s var(--ease);
   text-align: center; display: grid; gap: 12px; z-index: 10;
-  width: min(900px, 86vw);
+  width: min(1100px, 92vw);
 }
 .zoom-left .center-content, .zoom-right .center-content { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 
@@ -642,7 +642,17 @@ p.sub { font-weight: 300; font-size: clamp(14px, 2.2vw, 18px); color: var(--mute
 .left-anchored .text-content { text-align: left; }
 .left-anchored .search-bar { margin-left: 0; }
 
-.search-bar { display: flex; align-items: center; gap: 10px; background: var(--glass); border: 1px solid var(--border); border-radius: 16px; padding: 12px 16px; box-shadow: var(--shadow); width: min(640px, 70%); margin: 0 auto; }
+.right-anchored {
+  left: 55%;
+  transform: translate(-45%, -50%) scale(1);
+  width: min(1100px, 92vw);
+  text-align: right;
+}
+.right-anchored .text-content { text-align: right; }
+.right-anchored .search-bar { margin-left: auto; margin-right: 0; }
+
+
+.search-bar { display: flex; align-items: center; gap: 10px; background: var(--glass); border: 1px solid var(--border); border-radius: 16px; padding: 12px 16px; box-shadow: var(--shadow); width: min(760px, 78%); margin: 0 auto; }
 .search-bar input { flex: 1; border: none; outline: none; background: transparent; color: var(--fg-1); font-size: 1rem; }
 .search-bar button { border: 1px solid var(--border); background: hsl(210 18% 20%); color: var(--fg-1); font-weight: 700; padding: 10px 16px; border-radius: 12px; cursor: pointer; }
 
@@ -777,8 +787,187 @@ p.sub { font-weight: 300; font-size: clamp(14px, 2.2vw, 18px); color: var(--mute
 
 @media (max-width: 920px) {
   .left-split, .right-split { grid-template-columns: 1fr; }
-  :root { --scroll-max: min(76vh, calc(100vh - 240px)); }
+  :root { --scroll-max: min(78vh, calc(100vh - 220px));
+          --bottom-gap: 96px; }
 }
+
+/* ============================= */
+/* THEME OVERRIDES (colors only) */
+/* ============================= */
+
+/* LEFT / Employment: black text everywhere, white-ish surfaces, invert hover to black bg + white text */
+.zoom-left .panel--left,
+.zoom-left .left-anchored,
+.zoom-left .left-split { color: #000; }
+
+.zoom-left .left-anchored .text-content,
+.zoom-left .left-split .card,
+.zoom-left .left-split .card * { color: #000; }
+
+.zoom-left .left-anchored .search-bar {
+  background: rgba(255,255,255,.9);
+  border-color: rgba(0,0,0,.18);
+}
+.zoom-left .left-anchored .search-bar input { color: #000; }
+.zoom-left .left-anchored .search-bar ::placeholder { color: rgba(0,0,0,.6); }
+.zoom-left .left-anchored .search-bar button {
+  background: #111; color: #fff; border-color: #111;
+}
+.zoom-left .left-anchored .search-bar button:hover {
+  background: #000; color: #fff; border-color: #000;
+}
+
+.zoom-left .left-split .card.glass {
+  background: rgba(255,255,255,.9);
+  border-color: rgba(0,0,0,.18);
+}
+
+.zoom-left .left-split .job-row {
+  background: rgba(0,0,0,.06);
+  border-color: rgba(0,0,0,.18);
+  color: #000;
+}
+.zoom-left .left-split .job-row .job-company { color: rgba(0,0,0,.6); }
+.zoom-left .left-split .job-row:hover {
+  background: #000; color: #fff; border-color: #000;
+}
+.zoom-left .left-split .job-row.selected { outline-color: rgba(0,0,0,.7); }
+
+.zoom-left .left-split .chip {
+  background: rgba(0,0,0,.08);
+  border-color: rgba(0,0,0,.18);
+  color: #000;
+}
+.zoom-left .left-split .chip.chip--have{
+  border-color: rgba(16,128,16,.7);
+  background: rgba(16,128,16,.18);
+  box-shadow: inset 0 0 0 1px rgba(16,128,16,.5);
+  color: #000;
+}
+.zoom-left .left-split .chip:hover {
+  background: #000; color: #fff; border-color: #000;
+}
+
+.zoom-left .left-split .pill {
+  background: rgba(0,0,0,.08);
+  border-color: rgba(0,0,0,.18);
+  color: #000;
+}
+.zoom-left .left-split .pill:hover {
+  background: #000; color: #fff; border-color: #000;
+}
+
+.zoom-left .left-split .muted { color: rgba(0,0,0,.65); }
+.zoom-left .left-split .meta  { color: rgba(0,0,0,.55); }
+
+/* RIGHT / Skills or Courses: force all text white, invert hover to white bg + black text */
+.zoom-right .panel--right,
+.zoom-right .right-anchored,
+.zoom-right .right-split { color: #fff; }
+
+.zoom-right .right-anchored .text-content,
+.zoom-right .right-split .card,
+.zoom-right .right-split .card * { color: #fff; }
+
+.zoom-right .right-anchored .search-bar {
+  background: var(--glass);
+  border-color: var(--border);
+}
+.zoom-right .right-anchored .search-bar input { color: #fff; }
+.zoom-right .right-anchored .search-bar ::placeholder { color: rgba(255,255,255,.8); }
+.zoom-right .right-anchored .search-bar button { color: #fff; }
+.zoom-right .right-anchored .search-bar button:hover {
+  background: #fff; color: #000; border-color: #fff;
+}
+
+.zoom-right .right-split .card.glass {
+  background: var(--glass);
+  border-color: var(--border);
+}
+
+.zoom-right .right-split .job-row {
+  background: var(--glass);
+  border-color: var(--border);
+  color: #fff;
+}
+.zoom-right .right-split .job-row .job-company { color: rgba(255,255,255,.8); }
+.zoom-right .right-split .job-row:hover {
+  background: #fff; color: #000; border-color: #fff;
+}
+.zoom-right .right-split .job-row.selected { outline-color: rgba(255,255,255,.7); }
+
+.zoom-right .right-split .chip {
+  background: var(--glass-2);
+  border-color: var(--border);
+  color: #fff;
+}
+.zoom-right .right-split .chip.chip--have{
+  border-color: hsl(140 60% 70%);
+  background: hsl(140 60% 35% / .35);
+  box-shadow: inset 0 0 0 1px hsl(140 60% 75% / .5);
+  color: #fff;
+}
+.zoom-right .right-split .chip:hover {
+  background: #fff; color: #000; border-color: #fff;
+}
+
+.zoom-right .right-split .pill {
+  background: var(--glass-2);
+  border-color: var(--border);
+  color: #fff;
+}
+.zoom-right .right-split .pill:hover {
+  background: #fff; color: #000; border-color: #fff;
+}
+
+.zoom-right .right-split .muted { color: rgba(255,255,255,.85); }
+.zoom-right .right-split .meta  { color: rgba(255,255,255,.8); }
+
+.zoom-left .left-anchored .search-bar {
+  background: var(--glass);
+  border-color: var(--border);
+}
+.zoom-left .left-anchored .search-bar input { color: var(--fg-1); }
+.zoom-left .left-anchored .search-bar ::placeholder { color: var(--muted); }
+.zoom-left .left-anchored .search-bar button {
+  background: hsl(210 18% 20%);
+  color: var(--fg-1);
+  border-color: var(--border);
+}
+.zoom-left .left-anchored .search-bar button:hover {
+  background: #000; color: #fff; border-color: #000;
+}
+
+/* Selection color state = same as hover, and persists on hover */
+.zoom-left .left-split .job-row.selected,
+.zoom-left .left-split .job-row.selected:hover {
+  background: #000; color: #fff; border-color: #000;
+}
+.zoom-left .left-split .job-row.selected .job-company,
+.zoom-left .left-split .job-row.selected:hover .job-company {
+  color: rgba(255,255,255,.85);
+}
+
+.zoom-right .right-split .job-row.selected,
+.zoom-right .right-split .job-row.selected:hover {
+  background: #fff; color: #000; border-color: #fff;
+}
+.zoom-right .right-split .job-row.selected .job-company,
+.zoom-right .right-split .job-row.selected:hover .job-company {
+  color: rgba(0,0,0,.7);
+}
+
+/* Align the action buttons with the side (left or right) */
+.left-anchored .search-actions { justify-items: start; margin-left: 0; }
+.right-anchored .search-actions { justify-items: end;   margin-right: 0; }
+
+/* Make the buttons respect the side alignment (no forced centering) */
+.left-anchored .switch-btn.switch-inline.centered,
+.left-anchored .btn-secondary.centered { margin-left: 0; margin-right: auto; }
+
+.right-anchored .switch-btn.switch-inline.centered,
+.right-anchored .btn-secondary.centered { margin-left: auto; margin-right: 0; }
+
       `}</style>
     </>
   );

@@ -26,7 +26,7 @@ export default function TopBar() {
       <header className="topbar" role="banner">
         <div className="brand">
           <Link to="/" className="brand-name no-link" aria-label="Go to homepage">
-            MyWebsite
+            CareerCompass
           </Link>
         </div>
 
@@ -52,7 +52,7 @@ export default function TopBar() {
             align-items: center;
             height: 64px;
             padding: 0 16px;
-            background: rgba(116, 48, 136, 1);
+            background: rgba(210, 169, 253, 1.0);
             border-bottom: 1px solid rgba(255,255,255,0.12);
           }
           .brand-name {
@@ -86,7 +86,7 @@ export default function TopBar() {
             border-color: rgba(255,255,255,0.4);
           }
           .profile-btn:focus-visible {
-            outline: 2px solid rgba(96,165,250,0.6);
+            outline: 2px solid white;
             outline-offset: 2px;
           }
           .profile-img {
